@@ -1,0 +1,99 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Invite Users</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select name="filter_department_name" id="filter_department_id" class="form-select department-dropdown">
+                        
+                        {% if request.user.is_superuser %}
+                        <option value="">Select dpartment</option>
+                        {% for dep in department %}
+                            <option value="{{ dep.name }}">{{ dep.name }}</option>
+                        {% endfor %}
+                        
+                        {% else %}
+                        <option value="department">{{department}}</option>
+                        {% endif %}
+
+                    </select>
+
+                    <!-- Hidden input field to store the selected department -->
+                    <input type="hidden" name="selected_department" id="selected_department">
+
+                    <!-- <div class="input-group">
+                        <input type="email" name="email" class="form-control w-100 invite-modal_input mb-2" placeholder="Email">
+                    </div>
+                    <details>
+                        <summary>Add More</summary>
+                        <div class="input-group">
+                            <input type="email" name="email1" class="form-control w-100 invite-modal_input mb-2" placeholder="Email">
+                        </div>
+                    </details>
+                    <button class="add-more-btn remove_last-btn mt-3" id="removeEmail">
+                        Remove Last
+                    </button> -->
+                    <div id="dynamicInputContainer">
+                        <!-- Existing input fields go here -->
+                        <div class="input-group">
+                            <input type="email" name="additional_email" class="form-control w-100 invite-modal_input mb-2" placeholder="Email">
+                        </div>
+                    </div>
+                
+                    <button class="add-more-btn mt-3" id="addEmail">
+                        Add more
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener to the department dropdown
+        document.getElementById('filter_department_id').addEventListener('change', function() {
+            // Get the selected department value
+            var selectedDepartment = this.value;
+            
+            // Set the value of the hidden input field
+            document.getElementById('selected_department').value = selectedDepartment;
+        });
+
+        // Add event listener to the "Add Email" button
+        document.getElementById('addEmail').addEventListener('click', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            var container = document.getElementById('dynamicInputContainer');
+            
+            // Create a new input field
+            var newInput = document.createElement('div');
+            newInput.className = 'input-group';
+            newInput.innerHTML = '<input type="email" name="additional_email" class="form-control w-100 invite-modal_input mb-2" placeholder="Email">';
+            
+            // Append the new input field to the container
+            container.appendChild(newInput);
+        });
+    });
+</script>
+
+
+<script>
+    // Add event listener to the department dropdown
+    document.getElementById('filter_department_id').addEventListener('change', function() {
+        // Get the selected department value
+        var selectedDepartment = this.value;
+        
+        // Set the value of the hidden input field
+        document.getElementById('selected_department').value = selectedDepartment;
+    });
+</script>
